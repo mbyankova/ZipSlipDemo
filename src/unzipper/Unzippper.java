@@ -1,101 +1,27 @@
 package unzipper;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+
+
 
 public class Unzippper {
 
-	public static void unzipFile(String zipFile) {
-		String targetDirectory = createDirectoryNamedAsZipFile(zipFile);
-
-		byte[] buffer = new byte[1024];
-		ZipInputStream zis = null;
+	public static void unzipFile(String zipFileName) {		
 		try {
-			zis = new ZipInputStream(new FileInputStream(zipFile));
-		} catch (FileNotFoundException e) {
+			// Initiate ZipFile object with the path/name of the zip file.
+			ZipFile zipFile = new ZipFile(zipFileName);
+			
+			// Extracts all files to the path specified
+			zipFile.extractAll("unzipped");
+			
+		} catch (ZipException e) {
 			e.printStackTrace();
 		}
-
-		ZipEntry zipEntry = null;
-		try {
-			zipEntry = zis.getNextEntry();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		while (zipEntry != null) {
-			String fileName = zipEntry.getName();
-			File newFile = new File(targetDirectory + "/" + fileName);
-			FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(newFile);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			int len;
-			try {
-				while ((len = zis.read(buffer)) > 0) {
-					fos.write(buffer, 0, len);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-				fos.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				zipEntry = zis.getNextEntry();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		try {
-			zis.closeEntry();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		try {
-			zis.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	private static String createDirectoryNamedAsZipFile(String zipFile) {
-		FileSystem fileSystem = FileSystems.getDefault();
-
-		String targetDirectory = zipFile.replaceFirst("[.][^.]+$", "");
 		
-		try {
-			Files.createDirectory(fileSystem.getPath(targetDirectory));
-		} catch (FileAlreadyExistsException e) {
-			System.out.println("Directory " + targetDirectory + " already exists");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return targetDirectory;
 	}
 
 	private static boolean isFilenameValid(String fileName) {
