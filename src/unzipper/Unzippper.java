@@ -1,4 +1,4 @@
-package unzipper;
+package bg.fmi.uni_sofia.fileuploader.unzipper;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,11 +6,19 @@ import java.io.IOException;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
+public class Unzipper {
 
-
-public class Unzippper {
-
-	public static void unzipFile(String zipFileName) {		
+	public static void unzipFile(String zipFileName) {
+		if(!doesFileExists(zipFileName)) {
+			System.err.println("Invalid file name: file does not exists");
+			System.exit(0);
+		}
+		
+		if (!isFilenameValid(zipFileName)) {
+			System.err.println("Invalid file name");
+			System.exit(0);
+		}
+		
 		try {
 			// Initiate ZipFile object with the path/name of the zip file.
 			ZipFile zipFile = new ZipFile(zipFileName);
@@ -37,26 +45,6 @@ public class Unzippper {
 	private static boolean doesFileExists(String fileName) {
 		File f = new File(fileName);
 		return f.exists();
-	}
-
-	public static void main(String[] args) {
-		if(args.length != 1) {
-			System.err.println("Usage: java Unzipper zipFile");
-			System.exit(0);
-		}
-		
-		String zipFile = args[0];
-		if(!doesFileExists(zipFile)) {
-			System.err.println("Invalid file name: file does not exists");
-			System.exit(0);
-		}
-		
-		if (isFilenameValid(zipFile)) {
-			unzipFile(zipFile);
-		} else {
-			System.err.println("Invalid file name");
-		}
-
 	}
 
 }
