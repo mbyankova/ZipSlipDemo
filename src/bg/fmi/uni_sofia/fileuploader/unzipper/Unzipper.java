@@ -1,30 +1,26 @@
 package bg.fmi.uni_sofia.fileuploader.unzipper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
 public class Unzipper {
 
-	public static void unzipFile(String zipFileName) {
+	public static void unzipFile(String zipFileName, String unzipDestination) throws IOException {
 		if(!doesFileExists(zipFileName)) {
-			System.err.println("Invalid file name: file does not exists");
-			System.exit(0);
+			throw new FileNotFoundException("The given zip file not found: " + zipFileName);
 		}
 		
-		if (!isFilenameValid(zipFileName)) {
-			System.err.println("Invalid file name");
-			System.exit(0);
-		}
+		isFilenameValid(zipFileName);
 		
 		try {
 			// Initiate ZipFile object with the path/name of the zip file.
 			ZipFile zipFile = new ZipFile(zipFileName);
 			
 			// Extracts all files to the path specified
-			zipFile.extractAll("unzipped");
+			zipFile.extractAll(unzipDestination);
 			
 		} catch (ZipException e) {
 			e.printStackTrace();
@@ -32,14 +28,9 @@ public class Unzipper {
 		
 	}
 
-	private static boolean isFilenameValid(String fileName) {
+	private static void isFilenameValid(String fileName) throws IOException {
 		File f = new File(fileName);
-		try {
-			f.getCanonicalPath();
-			return true;
-		} catch (IOException e) {
-			return false;
-		}
+		f.getCanonicalPath();
 	}
 	
 	private static boolean doesFileExists(String fileName) {

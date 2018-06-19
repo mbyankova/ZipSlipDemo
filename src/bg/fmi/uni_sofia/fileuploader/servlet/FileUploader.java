@@ -60,7 +60,7 @@ public class FileUploader extends HttpServlet {
         out.flush();
         out.close();
 		
-        Unzipper.unzipFile(targetFile.getAbsolutePath());
+        Unzipper.unzipFile(targetFile.getAbsolutePath(), "D:\\mila\\NS2\\ZipSlipDemo\\unzipped\\");
         
 		doGet(request, response);
 	}
