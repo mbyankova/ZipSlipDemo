@@ -3,7 +3,6 @@ package bg.fmi.uni_sofia.fileuploader.unzipper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -21,7 +20,8 @@ public class Unzipper {
 		isFilenameValid(zipFileWithAbsolutePath);
 		
 		String fileName = getFileFromPath(zipFileWithAbsolutePath);
-		String finalDestination = createDirectoryNamedAsZipFile(fileName, destination);
+		String finalDestination = getFinalDestination(fileName, destination);
+		createDirectoryNamedAsZipFile(finalDestination);
 		
 		try {
 			// Initiate ZipFile object with the path/name of the zip file.
@@ -51,21 +51,20 @@ public class Unzipper {
 		return fileWithPath.getName();
 	}
 	
-	private static String createDirectoryNamedAsZipFile(String zipFile, String destination) {
-		FileSystem fileSystem = FileSystems.getDefault();
-
+	private static String getFinalDestination(String zipFile, String destination) {
 		String targetDirectory = zipFile.replaceFirst("[.][^.]+$", "");
 		String finalDestination = destination + targetDirectory;
-		
-		try {
-			Files.createDirectory(fileSystem.getPath(finalDestination));
-		} catch (FileAlreadyExistsException e) {
-			System.out.println("Directory " + targetDirectory + " already exists");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		return finalDestination;
 	}
-
+	
+	private static void createDirectoryNamedAsZipFile(String finalDestination) {
+		FileSystem fileSystem = FileSystems.getDefault();
+		
+		try {
+			Files.createDirectory(fileSystem.getPath(finalDestination));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
