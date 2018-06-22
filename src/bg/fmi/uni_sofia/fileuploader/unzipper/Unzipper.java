@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
@@ -61,10 +60,36 @@ public class Unzipper {
 	private static void createDirectoryNamedAsZipFile(String finalDestination) {
 		FileSystem fileSystem = FileSystems.getDefault();
 		
+		if(Files.exists(fileSystem.getPath(finalDestination))) {
+			try {
+				delete(new File(finalDestination));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		try {
 			Files.createDirectory(fileSystem.getPath(finalDestination));
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private static void delete(File file) throws IOException {
+
+		for (File childFile : file.listFiles()) {
+
+			if (childFile.isDirectory()) {
+				delete(childFile);
+			} else {
+				if (!childFile.delete()) {
+					throw new IOException();
+				}
+			}
+		}
+
+		if (!file.delete()) {
+			throw new IOException();
 		}
 	}
 }

@@ -28,14 +28,15 @@ public class FileUploader extends HttpServlet {
      */
     public FileUploader() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		Runtime.
+		   getRuntime().
+		   exec("cmd /c \"cd D:\\mila\\NS2\\ZipSlipDemo && start \"\" clean_up.bat\"");
 		response.getWriter().append("<form action='/ZipSlipDemo/FileUploader' method='post' enctype='multipart/form-data'><input type='file' name='zipFile' /><button type='submit' value='Submit!'/></form>");
 	}
 
