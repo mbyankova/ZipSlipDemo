@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +39,8 @@ public class FileUploader extends HttpServlet {
 		Runtime.
 		   getRuntime().
 		   exec("cmd /c \"cd D:\\mila\\NS2\\ZipSlipDemo && start \"\" clean_up.bat\"");
-		response.getWriter().append("<form action='/ZipSlipDemo/FileUploader' method='post' enctype='multipart/form-data'><input type='file' name='zipFile' /><button type='submit' value='Submit!'/></form>");
+		RequestDispatcher view = request.getRequestDispatcher("Uploader.html");
+		view.forward(request, response);
 	}
 
 	/**
